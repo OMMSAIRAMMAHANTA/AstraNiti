@@ -185,17 +185,28 @@
 
     </div>
 
-    <!-- ❤️ LIKE BUTTON SCRIPT -->
+    <!-- ❤️ LIKE BUTTON SCRIPT (LocalStorage System) -->
     <script>
         const likeBtn = document.getElementById("likeButton");
         const likeCount = document.getElementById("likeCount");
 
-        let count = 0;
-        let liked = false;
+        // Load saved values
+        let count = localStorage.getItem("likeCount")
+                    ? parseInt(localStorage.getItem("likeCount"))
+                    : 0;
+
+        let liked = localStorage.getItem("liked") === "true";
+
+        // Set UI on load
+        likeCount.innerText = count + " Likes";
+
+        if (liked) {
+            likeBtn.classList.add("liked");
+        }
 
         likeBtn.addEventListener("click", () => {
-            liked = !liked;
 
+            liked = !liked;
             likeBtn.classList.toggle("liked");
 
             if (liked) {
@@ -203,6 +214,10 @@
             } else {
                 count--;
             }
+
+            // Save to localStorage
+            localStorage.setItem("likeCount", count);
+            localStorage.setItem("liked", liked);
 
             likeCount.innerText = count + " Likes";
         });
