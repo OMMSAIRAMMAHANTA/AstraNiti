@@ -2,226 +2,556 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta-name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMM SAIRAM MAHANTA (Dark Mode)</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstraNiti - Bharat Badlega, Jab Hum Badlenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #121212;
-            --container-bg: #1d1d1d;
-            --text-color: #e0e0e0;
-            --heading-color: #ffffff;
-            --accent-color: #00f0a0;
-            --border-color: #333333;
-        }
-
-        body { 
-            font-family: 'Arial', sans-serif;
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            margin: 0;
-            padding: 20px;
-        }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .font-cursive { font-family: 'Great Vibes', cursive; }
+        .gradient-bg { background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); }
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card-hover:hover { transform: translateY(-5px); transition: all 0.3s ease; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .certificate-bg { background: white; border: 12px double #1e40af; padding: 40px; position: relative; }
+        .nav-link { cursor: pointer; transition: color 0.2s; position: relative; }
+        .nav-link:hover { color: #2563eb; }
+        .nav-link.active-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px; background: #2563eb; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.5rem; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .report-card { transition: all 0.3s ease; }
+        .report-card:hover { border-color: #2563eb; background-color: #f8fafc; }
         
-        .container {
-            border: 1px solid var(--border-color);
-            background-color: var(--container-bg);
-            border-radius: 10px;
-            padding: 30px;
-            max-width: 800px;
-            margin: 20px auto;
-            box-shadow: 0 0 20px rgba(0, 240, 160, 0.05);
-        }
-
-        h1 { 
-            font-size: 2.5em; 
-            text-align: center;
-            color: var(--heading-color);
-            text-shadow: 0 0 10px rgba(0, 240, 160, 0.3);
-            margin-bottom: 20px;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            color: var(--accent-color);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-top: 30px;
-        }
-
-        p, li { 
-            font-size: 17px; 
-            line-height: 1.7; 
-        }
-        
-        ul {
-            list-style-type: '»';
-            padding-left: 20px;
-        }
-
-        li {
-            margin-bottom: 10px; 
-            padding-left: 10px;
-        }
-
-        .contact-button {
-            display: inline-block; 
-            background-color: var(--accent-color);
-            color: #000000;
-            padding: 12px 25px; 
-            margin: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none; 
-            border: none;
-            border-radius: 5px; 
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .contact-button:hover {
-            background-color: var(--heading-color);
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 240, 160, 0.5);
-            transform: translateY(-2px);
-        }
-        
-        .button-wrapper {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        /* ❤️ LIKE BUTTON STYLE */
-        .like-container {
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .like-btn {
-            font-size: 40px;
-            cursor: pointer;
-            transition: 0.2s ease;
-            user-select: none;
-        }
-
-        .liked {
-            color: red;
-            transform: scale(1.3);
-            text-shadow: 0 0 15px red;
-        }
-
-        .like-count {
-            color: var(--accent-color);
-            font-size: 20px;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .container { margin: 0; padding: 20px; }
-            h1 { font-size: 2em; }
-        }
+        /* Mobile Menu Animation */
+        #mobile-menu { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
+        #mobile-menu.open { max-height: 400px; opacity: 1; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900">
 
-    <div class="container">
-        <h1>OMM SAIRAM MAHANTA</h1>
-        
-        <h2>ABOUT ME</h2>
-        <p>
-            I am Omm Sairam Mahanta, a passionate tech enthusiast currently pursuing my B.Tech.
-            I love coding, learning new technologies, building creative projects, and improving
-            myself every day. My goal is to grow as a developer and build something meaningful in tech.
-        </p>
-        
-        <h2>SKILLS</h2>
-        <ul>
-            <li>Java</li>
-            <li>Python</li>
-            <li>HTML / CSS</li>
-            <li>DBMS</li>
-            <li>MySQL</li>
-        </ul>
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+                    <i data-lucide="shield-check" class="text-blue-600 w-8 h-8"></i>
+                    <span class="text-xl font-bold tracking-tight">Astra<span class="text-blue-600">Niti</span></span>
+                </div>
 
-        <h2>DETAILS</h2>
-        <p><b>DOB:</b> 20/02/2006</p>
-        <p><b>Address:</b> At: Tihadiposi, Dist: Keonjhar, Odisha - 758031</p>
-        
-        <!-- CONTACT ME -->
-        <h2>CONTACT ME</h2>
-        <div class="button-wrapper">
-            <a href="mailto:saimahanta3@gmail.com" class="contact-button">
-                📧 Email Me
-            </a>
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-6 text-sm font-medium">
+                    <span onclick="showPage('home')" id="nav-home" class="nav-link active-link">Home</span>
+                    <span onclick="showPage('habits')" id="nav-habits" class="nav-link">Daily Habits</span>
+                    <span onclick="showPage('report')" id="nav-report" class="nav-link">Report Issue</span>
+                    <span onclick="showPage('problems')" id="nav-problems" class="nav-link">Problems</span>
+                    <span onclick="showPage('solutions')" id="nav-solutions" class="nav-link">Solutions</span>
+                    <span onclick="showPage('quiz')" id="nav-quiz" class="nav-link">Civic Quiz</span>
+                </div>
+
+                <!-- Right Actions & Mobile Toggle -->
+                <div class="flex items-center gap-4">
+                    <button onclick="showPage('pledge')" class="hidden sm:block bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200">Take Pledge</button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-gray-600 hover:text-blue-600 transition focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- SOCIAL MEDIA -->
-        <h2>SOCIAL MEDIA</h2>
-        <div class="button-wrapper">
-
-            <!-- Instagram -->
-            <a href="https://www.instagram.com/s_ensei_426" target="_blank" class="contact-button">
-                📸 Instagram
-            </a>
-
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/search/top?q=Omm%20Sairam%20Mahanta" target="_blank" class="contact-button">
-                📘 Facebook
-            </a>
-
-            <!-- YouTube -->
-            <a href="https://www.youtube.com/@three_brothers426" target="_blank" class="contact-button">
-                ▶️ YouTube
-            </a>
-
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="lg:hidden bg-white border-t border-gray-100 shadow-lg">
+            <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col text-center">
+                <button onclick="showPage('home')" class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">Home</button>
+                <button onclick="showPage('habits')" class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">Daily Habits</button>
+                <button onclick="showPage('report')" class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">Report Issue</button>
+                <button onclick="showPage('problems')" class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">Problems</button>
+                <button onclick="showPage('solutions')" class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">Solutions</button>
+                <button onclick="showPage('quiz')" class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">Civic Quiz</button>
+                <button onclick="showPage('pledge')" class="block w-full text-left px-4 py-3 rounded-xl font-bold text-blue-600 bg-blue-50 mt-2">Take Pledge</button>
+            </div>
         </div>
+    </nav>
 
-        <!-- ❤️ LIKE BUTTON + COUNT -->
-        <div class="like-container">
-            <span id="likeButton" class="like-btn">❤️</span>
-            <div id="likeCount" class="like-count">0 Likes</div>
+    <!-- PAGE: HOME -->
+    <main id="page-home" class="page-section active">
+        <!-- Hero Section -->
+        <header class="gradient-bg pt-16 pb-24 px-4 border-b border-gray-100">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-xs font-bold mb-6 tracking-widest uppercase">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i> Civic Awareness Movement
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 mb-8 leading-tight">
+                    Bharat Badlega, <br><span class="text-blue-600">Jab Hum Badlenge.</span>
+                </h1>
+                <p class="text-gray-600 text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Stop complaining, start participating. Join the community dedicated to making India a more disciplined and cleaner nation.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="showPage('report')" class="bg-red-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-105 transition shadow-xl shadow-red-100">
+                        <i data-lucide="camera" class="w-5 h-5"></i> Report a Problem
+                    </button>
+                    <button onclick="document.getElementById('video-modal').style.display='flex'" class="bg-white border border-gray-200 px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-gray-50 transition">
+                        <i data-lucide="play" class="w-5 h-5"></i> Video Library
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <section class="py-12 bg-white px-4 -mt-12">
+            <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 bg-white p-10 rounded-3xl shadow-2xl border border-gray-50">
+                <div class="text-center">
+                    <div class="text-4xl font-black text-blue-600" id="stat-pledges">12,450+</div>
+                    <div class="text-gray-400 text-[10px] font-bold mt-1 uppercase tracking-widest">Total Pledges</div>
+                </div>
+                <div class="text-center border-l border-gray-100">
+                    <div class="text-4xl font-black text-red-500">3,120</div>
+                    <div class="text-gray-400 text-[10px] font-bold mt-1 uppercase tracking-widest">Issues Reported</div>
+                </div>
+                <div class="text-center border-l border-gray-100">
+                    <div class="text-4xl font-black text-blue-600">1.2M</div>
+                    <div class="text-gray-400 text-[10px] font-bold mt-1 uppercase tracking-widest">Views Reached</div>
+                </div>
+                <div class="text-center border-l border-gray-100">
+                    <div class="text-4xl font-black text-green-600">842</div>
+                    <div class="text-gray-400 text-[10px] font-bold mt-1 uppercase tracking-widest">Resolved</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Video -->
+        <section class="py-24 px-4">
+            <div class="max-w-5xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-10">Understanding Civic Sense</h2>
+                <div class="video-container shadow-2xl">
+                    <iframe src="https://www.youtube.com/embed/0uXEJTqQD8U" title="Civic Sense Moral Lesson" allowfullscreen></iframe>
+                </div>
+                <div class="mt-8 flex justify-center gap-6">
+                    <span class="flex items-center gap-2 text-sm text-gray-500"><i data-lucide="check-circle" class="text-green-500 w-4 h-4"></i> Workplace Habits</span>
+                    <span class="flex items-center gap-2 text-sm text-gray-500"><i data-lucide="check-circle" class="text-green-500 w-4 h-4"></i> Road Etiquette</span>
+                    <span class="flex items-center gap-2 text-sm text-gray-500"><i data-lucide="check-circle" class="text-green-500 w-4 h-4"></i> Public Property</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PAGE: REPORT PROBLEM -->
+    <main id="page-report" class="page-section py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16">
+                <!-- Form -->
+                <div>
+                    <h1 class="text-4xl font-extrabold mb-4">Report an Issue</h1>
+                    <p class="text-gray-500 mb-10">Found a garbage pile or a broken road? Document it here to raise awareness and notify the community.</p>
+                    
+                    <form id="report-form" class="space-y-6 bg-white p-8 rounded-3xl border border-gray-200 shadow-sm" onsubmit="handleReportSubmit(event)">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                            <select id="report-category" class="w-full px-5 py-4 rounded-xl bg-gray-50 border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                                <option value="Garbage Pile">🗑️ Garbage Pile</option>
+                                <option value="Broken Road">🛣️ Broken Road / Pothole</option>
+                                <option value="Dirty Public Toilet">🚻 Dirty Public Toilet</option>
+                                <option value="Traffic Violation">🚦 Traffic Violation</option>
+                                <option value="Public Property Damage">🏛️ Public Property Damage</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Location / Area</label>
+                            <div class="relative">
+                                <i data-lucide="map-pin" class="absolute left-4 top-4 text-gray-400 w-5 h-5"></i>
+                                <input type="text" id="report-location" placeholder="e.g. MG Road, Near City Mall" class="w-full pl-12 pr-5 py-4 rounded-xl bg-gray-50 border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                            <textarea id="report-desc" rows="3" placeholder="Explain the situation..." class="w-full px-5 py-4 rounded-xl bg-gray-50 border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-5 h-5"></i> Submit Report
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Live Feed -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                        Recent Reports (Live)
+                    </h2>
+                    <div id="reports-feed" class="space-y-4">
+                        <!-- Reports will be injected here upon submission -->
+                        <div id="no-reports-msg" class="text-center py-10 bg-white rounded-3xl border border-dashed border-gray-300">
+                            <i data-lucide="info" class="w-10 h-10 text-gray-300 mx-auto mb-2"></i>
+                            <p class="text-gray-400 text-sm">Abhi tak koi reports nahi hain. Naya report submit karein!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
 
+    <!-- PAGE: HABITS -->
+    <main id="page-habits" class="page-section py-20 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl font-bold mb-16">The Civic Etiquette Manual</h1>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-left">
+                    <i data-lucide="briefcase" class="text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-4">At Work</h3>
+                    <ul class="text-sm space-y-3 text-gray-600">
+                        <li>• Be Punctual</li>
+                        <li>• Polite even when saying 'No'</li>
+                        <li>• No Discrimination (Gender/Caste)</li>
+                        <li>• Proper Dress Code</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-left">
+                    <i data-lucide="car" class="text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-4">On Road</h3>
+                    <ul class="text-sm space-y-3 text-gray-600">
+                        <li>• Observe traffic rules strictly</li>
+                        <li>• Walk for shorter distances</li>
+                        <li>• Respect Pedestrian rights</li>
+                        <li>• Avoid Road Rage</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-left">
+                    <i data-lucide="trash-2" class="text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-4">Public Spaces</h3>
+                    <ul class="text-sm space-y-3 text-gray-600">
+                        <li>• No Spitting in corners</li>
+                        <li>• Use garbage bins/spatoons</li>
+                        <li>• No Graffiti on heritage walls</li>
+                        <li>• Respect public transport property</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: PROBLEMS -->
+    <main id="page-problems" class="page-section py-20 px-4 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-16 text-center">
+                <h1 class="text-4xl font-bold mb-4 text-gray-900">Why India Struggles with Civic Sense?</h1>
+                <p class="text-gray-600 text-lg max-w-3xl mx-auto">Lack of civic sense is not a genetic trait; it is a complex social and systemic issue.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100 card-hover">
+                    <h3 class="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
+                        <i data-lucide="users"></i> Casteism & Classism
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">For centuries, sanitation work was tied to specific communities, creating a mental block where cleaning is seen as "someone else's job." This mentality reduces personal responsibility.</p>
+                    <div class="p-4 bg-red-50 rounded-xl text-xs text-red-700 font-bold border border-red-100 flex items-center gap-2">
+                        <i data-lucide="alert-circle"></i> FACT: Over 90% of sanitation workers belong to Dalit communities.
+                    </div>
+                </div>
+                <div class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100 card-hover">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-6 flex items-center gap-2">
+                        <i data-lucide="settings"></i> Weak Government Systems
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">If the environment is dirty and infrastructure like bins or toilets are missing, people follow a "herd mentality" and litter more. Discipline requires supportive systems.</p>
+                    <div class="p-4 bg-blue-50 rounded-xl text-xs text-blue-700 font-bold border border-blue-100 flex items-center gap-2">
+                        <i data-lucide="info"></i> NOTE: Infrastructure is the foundation of civic discipline.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: SOLUTIONS -->
+    <main id="page-solutions" class="page-section py-20 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl font-bold mb-16">How India Can Improve</h1>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-blue-50 p-8 rounded-3xl border border-blue-100 text-left">
+                    <h3 class="text-xl font-bold mb-3 text-blue-900">1. Education</h3>
+                    <p class="text-gray-600 text-sm">Schools should teach "Osoji" (self-cleaning) to build respect for labor and responsibility from childhood.</p>
+                </div>
+                <div class="bg-green-50 p-8 rounded-3xl border border-green-100 text-left">
+                    <h3 class="text-xl font-bold mb-3 text-green-900">2. Systems</h3>
+                    <p class="text-gray-600 text-sm">Better urban planning, clean toilets, and frequent garbage collection points encourage good behavior.</p>
+                </div>
+                <div class="bg-orange-50 p-8 rounded-3xl border border-orange-100 text-left">
+                    <h3 class="text-xl font-bold mb-3 text-orange-900">3. Enforcement</h3>
+                    <p class="text-gray-600 text-sm">Strict fines and high probability of punishment (CCTV monitoring) create a culture of discipline.</p>
+                </div>
+                <div class="bg-purple-50 p-8 rounded-3xl border border-purple-100 text-left">
+                    <h3 class="text-xl font-bold mb-3 text-purple-900">4. Empathy</h3>
+                    <p class="text-gray-600 text-sm">Promoting the concept of 'Samfundssind' (social-mindedness) — putting society's interest above personal comfort.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: QUIZ -->
+    <main id="page-quiz" class="page-section py-20 px-4 bg-blue-900 text-white min-h-[80vh]">
+        <div class="max-w-3xl mx-auto text-center">
+            <div id="quiz-container">
+                <span class="bg-blue-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Self Assessment</span>
+                <h2 class="text-4xl font-bold mt-4 mb-10">Check Your Civic Score</h2>
+                <div class="bg-blue-800 p-10 rounded-3xl shadow-2xl text-left" id="quiz-box">
+                    <div id="question-text" class="text-2xl font-semibold mb-8">Loading question...</div>
+                    <div class="grid gap-4" id="options-container">
+                        <!-- Options will be injected here -->
+                    </div>
+                </div>
+            </div>
+            <div id="quiz-result" class="hidden">
+                <h2 class="text-7xl font-black mb-4 text-white" id="final-score">0%</h2>
+                <h3 class="text-3xl font-bold mb-4 text-blue-300" id="score-title">Title</h3>
+                <p class="text-blue-100 mb-10 text-lg leading-relaxed" id="score-msg">Message</p>
+                <button onclick="resetQuiz()" class="bg-white text-blue-900 px-10 py-4 rounded-2xl font-bold hover:scale-105 transition">Retake Quiz</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE: PLEDGE -->
+    <main id="page-pledge" class="page-section py-20 px-4 bg-gray-900 text-white min-h-[80vh]">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-extrabold mb-8">Take the Digital Pledge</h2>
+            <div id="pledge-form-container" class="max-w-md mx-auto bg-gray-800 p-8 rounded-3xl border border-gray-700">
+                <input type="text" id="pledge-name" placeholder="Full Name" class="w-full px-6 py-4 rounded-xl bg-gray-900 border-gray-700 text-white mb-6 focus:ring-2 focus:ring-blue-500 outline-none">
+                <button onclick="submitPledge()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-900">Commit & Get Certificate</button>
+            </div>
+            <div id="pledge-certificate" class="hidden mt-10">
+                <div class="certificate-bg mx-auto max-w-xl text-gray-900 rounded-lg p-10 shadow-2xl">
+                    <h3 class="text-2xl font-serif font-bold text-blue-900 uppercase tracking-widest border-b pb-4 mb-8">Civic Sense Commitment</h3>
+                    <p class="italic text-gray-500">I, <span id="cert-name-text" class="font-bold text-black border-b border-dashed px-4">Name</span>,</p>
+                    <p class="text-sm mt-6 leading-relaxed">Pledge to be a responsible citizen of India. I will maintain cleanliness, respect all labor, follow traffic laws, and protect public property.</p>
+                    
+                    <div class="mt-8 flex justify-end">
+                         <div class="text-center">
+                            <div id="cert-signature" class="font-cursive text-3xl text-blue-900 transform -rotate-2">Omm Sairam Mahanta</div>
+                            <div class="border-t border-gray-300 w-48 mt-2"></div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Founder, AstraNiti</div>
+                         </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
+                        <div>Verified Citizen</div>
+                        <div>AstraNiti.org</div>
+                    </div>
+                </div>
+                <p class="mt-6 text-gray-400 text-sm">Right click the certificate to save or take a screenshot to share!</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="fixed inset-0 bg-black/95 z-[100] hidden items-center justify-center p-6">
+        <div class="w-full max-w-5xl bg-gray-900 rounded-[2.5rem] p-8 border border-white/10 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="document.getElementById('video-modal').style.display='none'" class="absolute top-6 right-6 text-white/50 hover:text-white transition">
+                <i data-lucide="x-circle" class="w-10 h-10"></i>
+            </button>
+            <h2 class="text-3xl font-bold text-white mb-10 text-center font-cursive">Video Learning Library</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/S2Y2f59v65k" title="Analysis" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Systemic Analysis</h3>
+                    <p class="text-gray-400 text-sm mt-1">Why India struggles compared to Denmark.</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/0uXEJTqQD8U" title="Moral Education" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Moral Education</h3>
+                    <p class="text-gray-400 text-sm mt-1">Class 7 lesson on basic daily civic sense.</p>
+                </div>
+                <!-- New Video: Indians Have Zero Civic Sense -->
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/HZA-5drx0XA" title="Indians Have Zero Civic Sense" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Indians Have Zero Civic Sense</h3>
+                    <p class="text-gray-400 text-sm mt-1">A hard-hitting reality check by Abhi and Niyu on our global image.</p>
+                </div>
+                 <!-- New Video: India's Civic Sense Getting Worse -->
+                 <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/7SybvctJd1w" title="India's Civic Sense Is Getting Worse" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Civic Sense is Getting Worse?</h3>
+                    <p class="text-gray-400 text-sm mt-1">The "Me First" vs "We First" mentality analysis.</p>
+                </div>
+                <!-- New Video: 3 Reasons for Zero Civic Sense -->
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/STKSWGA_4jM" title="3 Reasons for Zero Civic Sense" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">3 Reasons for Zero Civic Sense</h3>
+                    <p class="text-gray-400 text-sm mt-1">Theft, Broken Window Illusion, and 'Me First' attitude: A deep dive into why we lack civic sense.</p>
+                </div>
+                <!-- New Video: Recommended Watch 1 -->
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/5flyw2i-T7c" title="Civic Awareness Video" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Civic Responsibility</h3>
+                    <p class="text-gray-400 text-sm mt-1">An important perspective on maintaining our public spaces and social duties.</p>
+                </div>
+                <!-- New Video: Recommended Watch 2 -->
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/ZZMgt5SMPEQ" title="Social Awareness Video" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Building a Better Society</h3>
+                    <p class="text-gray-400 text-sm mt-1">Understanding the collective effort needed for a cleaner and more disciplined nation.</p>
+                </div>
+                <!-- Existing Videos -->
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/5vMFvPyfoII" title="Discipline" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Power of Discipline</h3>
+                    <p class="text-gray-400 text-sm mt-1">The foundation of personal and national growth.</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-3xl border border-gray-700">
+                    <div class="video-container mb-4">
+                        <iframe src="https://www.youtube.com/embed/x6bNwmrBPXI" title="Civic Engagement" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Civic Engagement</h3>
+                    <p class="text-gray-400 text-sm mt-1">How active participation creates better communities.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- ❤️ LIKE BUTTON SCRIPT (LocalStorage System) -->
+    <!-- Navigation JS -->
     <script>
-        const likeBtn = document.getElementById("likeButton");
-        const likeCount = document.getElementById("likeCount");
+        lucide.createIcons();
 
-        // Load saved values
-        let count = localStorage.getItem("likeCount")
-                    ? parseInt(localStorage.getItem("likeCount"))
-                    : 0;
-
-        let liked = localStorage.getItem("liked") === "true";
-
-        // Set UI on load
-        likeCount.innerText = count + " Likes";
-
-        if (liked) {
-            likeBtn.classList.add("liked");
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('open');
         }
 
-        likeBtn.addEventListener("click", () => {
+        function showPage(pageId) {
+            // Close mobile menu if open
+            const menu = document.getElementById('mobile-menu');
+            if(menu) menu.classList.remove('open');
 
-            liked = !liked;
-            likeBtn.classList.toggle("liked");
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-link'));
+            
+            const target = document.getElementById('page-' + pageId);
+            if(target) target.classList.add('active');
+            
+            const nav = document.getElementById('nav-' + pageId);
+            if(nav) nav.classList.add('active-link');
+            window.scrollTo(0,0);
 
-            if (liked) {
-                count++;
-            } else {
-                count--;
-            }
+            // Re-load quiz if needed
+            if(pageId === 'quiz' && currentQ === 0) loadQ();
+        }
 
-            // Save to localStorage
-            localStorage.setItem("likeCount", count);
-            localStorage.setItem("liked", liked);
+        function handleReportSubmit(e) {
+            e.preventDefault();
+            const cat = document.getElementById('report-category').value;
+            const loc = document.getElementById('report-location').value;
+            const desc = document.getElementById('report-desc').value;
 
-            likeCount.innerText = count + " Likes";
-        });
+            if(!loc) return alert("Please specify the location!");
+
+            const feed = document.getElementById('reports-feed');
+            const noMsg = document.getElementById('no-reports-msg');
+            
+            if(noMsg) noMsg.remove();
+
+            const newReport = document.createElement('div');
+            newReport.className = "bg-blue-50 p-5 rounded-2xl border border-blue-200 report-card animate-bounce";
+            newReport.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">${cat}</span>
+                    <span class="text-[10px] text-gray-400 font-bold">JUST NOW</span>
+                </div>
+                <h4 class="font-bold text-gray-800">New Report from User</h4>
+                <p class="text-xs text-gray-500 mt-1">"${desc || 'No description provided.'}"</p>
+                <div class="mt-4 flex items-center gap-2 text-[10px] font-medium text-blue-600">
+                    <i data-lucide="map-pin" class="w-3 h-3"></i> ${loc}
+                </div>
+            `;
+            feed.prepend(newReport);
+            lucide.createIcons();
+            document.getElementById('report-form').reset();
+            
+            // Temporary confirmation
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "✅ Submitted Successfully!";
+            btn.classList.add('bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-600');
+            }, 3000);
+        }
+
+        function submitPledge() {
+            const name = document.getElementById('pledge-name').value;
+            if(!name) return alert("Please enter your name!");
+            document.getElementById('cert-name-text').innerText = name;
+            
+            // Note: Signature is now hardcoded in HTML as per request
+            // We no longer update 'cert-signature' here
+
+            document.getElementById('pledge-form-container').classList.add('hidden');
+            document.getElementById('pledge-certificate').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // Quiz Logic
+        const quizData = [
+            { q: "Road pe chalte waqt aap kachra kahan phaikte hain?", a: ["Dustbin dhoond ke", "Road side pe", "Ghar le jaake dispose karta hoon", "Jahan sab phaikte hain"], s: [25, 5, 25, 0] },
+            { q: "Signal pe green light se pehle log honk karein toh?", a: ["Main bhi honk karta hoon", "Ignore karke light ka wait karta hoon", "Gussa karta hoon", "Toda aage nikal jaata hoon"], s: [0, 25, 5, 5] },
+            { q: "Public toilet use karne ke baad flush?", a: ["Humesha", "Sirf zarurat ho tab", "Nahi, flush kharab hota hai", "Wait for cleaner"], s: [25, 10, 0, 5] },
+            { q: "Sanitation worker se baat karte waqt?", a: ["Respecful aur polite", "Normal", "Ignorant", "Unhe low feel karata hoon"], s: [25, 15, 5, 0] }
+        ];
+
+        let currentQ = 0, score = 0;
+
+        function loadQ() {
+            const data = quizData[currentQ];
+            const qText = document.getElementById('question-text');
+            const cont = document.getElementById('options-container');
+            
+            if(!qText || !cont) return;
+
+            qText.innerText = data.q;
+            cont.innerHTML = '';
+            data.a.forEach((opt, i) => {
+                const b = document.createElement('button');
+                b.className = "bg-blue-700/50 hover:bg-blue-600 p-4 rounded-xl text-left border border-blue-500/30 transition text-sm";
+                b.innerText = opt;
+                b.onclick = () => { score += data.s[i]; currentQ++; if(currentQ < quizData.length) loadQ(); else showR(); };
+                cont.appendChild(b);
+            });
+        }
+
+        function showR() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score + "%";
+            document.getElementById('score-title').innerText = score >= 80 ? "Civic Hero!" : "Civic Learner";
+            document.getElementById('score-msg').innerText = score >= 80 ? "Excellent! You are a role model for a cleaner India. Keep spreading the awareness." : "Good effort! A bit more awareness about daily habits will help you and the nation grow together.";
+        }
+
+        function resetQuiz() {
+            currentQ = 0; score = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            loadQ();
+        }
+
+        // Initialize quiz on start
+        window.onload = loadQ;
     </script>
-
 </body>
 </html>
