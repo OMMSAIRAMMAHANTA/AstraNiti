@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Market Runs – Roommate Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b1120;
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 1.5rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.5);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area i {
+            font-size: 2rem;
+            color: #818cf8;
+        }
+
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #f0f9ff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #818cf8;
+        }
+
+        /* Create run card */
+        .create-run {
+            background: rgba(255,255,255,0.02);
+            border-radius: 32px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px dashed #4f46e5;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 12px 16px;
+            color: white;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #818cf8;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #4f46e5, #7c3aed);
+            border: none;
+            border-radius: 60px;
+            padding: 12px 28px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px -5px rgba(79,70,229,0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px -5px rgba(79,70,229,0.7);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 60px;
+            padding: 12px 28px;
+            color: #cbd5e1;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* Active runs list */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.8rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .runs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .run-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 32px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .run-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .run-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .run-status {
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-planned {
+            background: #f59e0b20;
+            color: #fbbf24;
+        }
+
+        .status-active {
+            background: #3b82f620;
+            color: #60a5fa;
+        }
+
+        .status-completed {
+            background: #10b98120;
+            color: #34d399;
+        }
+
+        .run-meta {
+            display: flex;
+            gap: 15px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .items-list {
+            margin: 1rem 0;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .item-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .item-details {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .item-actions button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 6px 14px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .item-actions button:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 40px;
+        }
+
+        .add-item-form input, .add-item-form select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 10px 14px;
+            color: white;
+            outline: none;
+            flex: 1 1 120px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            color: #f87171;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .success-message {
+            background: rgba(52,211,153,0.15);
+            border: 1px solid #34d399;
+            border-radius: 40px;
+            padding: 1rem;
+            color: #d1fae5;
+            text-align: center;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <div class="header">
+            <div class="logo-area">
+                <i class="fas fa-shopping-cart"></i>
+                <h1>Market Runs</h1>
+            </div>
+            <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        </div>
+
+        <!-- Create new run -->
+        <div class="create-run">
+            <h3 style="margin-bottom: 1rem;"><i class="fas fa-plus-circle"></i> Start a new market run</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Market name (optional)</label>
+                    <input type="text" id="newMarketName" placeholder="e.g., DMart">
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="newRunDate">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <input type="text" id="newRunNotes" placeholder="Any notes...">
+                </div>
+                <button class="btn-primary" onclick="createRun()"><i class="fas fa-play"></i> Start run</button>
+            </div>
+            <div id="createError" class="error-message"></div>
+        </div>
+
+        <!-- Active runs -->
+        <div class="section-title"><i class="fas fa-list"></i> Active runs</div>
+        <div class="runs-list" id="activeRunsContainer">
+            <!-- Populated by JS -->
+            <div class="run-card">Loading...</div>
+        </div>
+
+        <!-- Completed runs (optional) -->
+        <div class="section-title"><i class="fas fa-history"></i> Past runs</div>
+        <div class="runs-list" id="pastRunsContainer">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <script>
+        // FIXED: Dynamic API Base to match localhost or 127.0.0.1
+        const host = window.location.hostname;
+        const API_BASE = `http://${host}:5000/api`;
+
+        // Check if user is logged in
+        function isLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        if (!isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+
+        // FIXED: Custom session fetch that handles cookies and 401 redirects
+        async function sessionFetch(url, options = {}) {
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    credentials: 'include',  // Most important part for session cookies!
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                if (response.status === 401) {
+                    console.error("Session expired or invalid cookie, redirecting...");
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    window.location.href = 'index.html';
+                    return null;
+                }
+                return response;
+            } catch (err) {
+                console.error('Network error:', err);
+                throw err;
+            }
+        }
+
+        // Set today's date as default for new run
+        document.getElementById('newRunDate').valueAsDate = new Date();
+
+        let roommates = []; // for item assignment
+
+        // Load roommates
+        async function loadRoommates() {
+            try {
+                const res = await sessionFetch(`${API_BASE}/users/roommates`, { method: 'GET' });
+                if (!res) return;
+                
+                const data = await res.json();
+                if (data.success) roommates = data.data.roommates || [];
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Load market runs
+        async function loadRuns() {
+            try {
+                const res = await sessionFetch(`${API_BASE}/market`, { method: 'GET' });
+                if (!res) return;
+                
+                const data = await res.json();
+                if (data.success) {
+                    renderRuns(data.data.runs || []);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderRuns(runs) {
+            const activeContainer = document.getElementById('activeRunsContainer');
+            const pastContainer = document.getElementById('pastRunsContainer');
+            activeContainer.innerHTML = '';
+            pastContainer.innerHTML = '';
+
+            const active = runs.filter(r => r.status !== 'completed');
+            const past = runs.filter(r => r.status === 'completed');
+
+            if (active.length === 0) {
+                activeContainer.innerHTML = '<div class="run-card">No active market runs. Start one above!</div>';
+            } else {
+                active.forEach(run => renderRunCard(run, activeContainer));
+            }
+
+            if (past.length === 0) {
+                pastContainer.innerHTML = '<div class="run-card">No completed runs yet.</div>';
+            } else {
+                past.forEach(run => renderRunCard(run, pastContainer, true));
+            }
+        }
+
+        function renderRunCard(run, container, isPast = false) {
+            const card = document.createElement('div');
+            card.className = 'run-card';
+            card.id = `run-${run.market_run_id}`;
+
+            const statusClass = run.status === 'planned' ? 'status-planned' : (run.status === 'in_progress' ? 'status-active' : 'status-completed');
+            const statusText = run.status === 'planned' ? 'Planned' : (run.status === 'in_progress' ? 'In progress' : 'Completed');
+
+            let itemsHtml = '';
+            if (run.items && run.items.length) {
+                itemsHtml = '<div class="items-list">';
+                run.items.forEach(item => {
+                    itemsHtml += `
+                        <div class="item-row" id="item-${item.item_id}">
+                            <div class="item-name"><i class="fas fa-cube"></i> ${item.item_name}</div>
+                            <div class="item-details">
+                                <span>Qty: ${item.quantity} ${item.unit || ''}</span>
+                                ${item.total_price ? `<span>₹${item.total_price}</span>` : ''}
+                                <span>${item.is_shared ? 'Shared' : (item.specific_for_name ? `For ${item.specific_for_name}` : 'Personal')}</span>
+                                ${item.purchased_by ? `<span>✓ ${item.purchased_by_name || 'Purchased'}</span>` : ''}
+                            </div>
+                            ${!isPast && !item.purchased_by ? `
+                                <div class="item-actions">
+                                    <button onclick="markPurchased(${item.item_id})"><i class="fas fa-check"></i> Mark bought</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                itemsHtml += '</div>';
+            } else {
+                itemsHtml = '<div class="item-row">No items yet. Add some below.</div>';
+            }
+
+            const addItemForm = !isPast ? `
+                <div class="add-item-form" id="add-form-${run.market_run_id}">
+                    <input type="text" placeholder="Item name" id="item-name-${run.market_run_id}">
+                    <input type="number" placeholder="Qty" id="item-qty-${run.market_run_id}" value="1" min="0" step="0.01">
+                    <select id="item-unit-${run.market_run_id}">
+                        <option value="piece">piece</option>
+                        <option value="kg">kg</option>
+                        <option value="liter">liter</option>
+                        <option value="pack">pack</option>
+                    </select>
+                    <select id="item-for-${run.market_run_id}">
+                        <option value="shared">Shared</option>
+                        ${roommates.map(rm => `<option value="${rm.user_id}">${rm.full_name}</option>`).join('')}
+                    </select>
+                    <button class="btn-secondary" onclick="addItem(${run.market_run_id})"><i class="fas fa-plus"></i> Add</button>
+                </div>
+            ` : '';
+
+            const completeButton = !isPast && run.status !== 'completed' ? `
+                <div style="margin-top: 1rem;">
+                    <button class="btn-primary" onclick="completeRun(${run.market_run_id})"><i class="fas fa-check-double"></i> Complete run & create expenses</button>
+                </div>
+            ` : '';
+
+            card.innerHTML = `
+                <div class="run-header">
+                    <div class="run-title">
+                        <i class="fas fa-store"></i> ${run.market_name || 'Market run'} 
+                        <span class="run-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="run-meta">
+                        <span><i class="fas fa-user"></i> ${run.creator_name || 'You'}</span>
+                        <span><i class="fas fa-calendar"></i> ${new Date(run.run_date).toLocaleDateString()}</span>
+                    </div>
+                </div>
+                ${itemsHtml}
+                ${addItemForm}
+                ${completeButton}
+            `;
+            container.appendChild(card);
+        }
+
+        // Create new run
+        async function createRun() {
+            const name = document.getElementById('newMarketName').value.trim();
+            const date = document.getElementById('newRunDate').value;
+            const notes = document.getElementById('newRunNotes').value.trim();
+            const errorEl = document.getElementById('createError');
+            errorEl.innerHTML = '';
+
+            try {
+                const res = await sessionFetch(`${API_BASE}/market`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        market_name: name || undefined,
+                        run_date: date,
+                        notes: notes || undefined
+                    })
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    // Clear form
+                    document.getElementById('newMarketName').value = '';
+                    document.getElementById('newRunNotes').value = '';
+                    // Reload runs
+                    loadRuns();
+                } else {
+                    errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Failed to create run'}`;
+                }
+            } catch (err) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error';
+            }
+        }
+
+        // Add item to run
+        async function addItem(runId) {
+            const name = document.getElementById(`item-name-${runId}`).value.trim();
+            const qty = parseFloat(document.getElementById(`item-qty-${runId}`).value);
+            const unit = document.getElementById(`item-unit-${runId}`).value;
+            const forVal = document.getElementById(`item-for-${runId}`).value;
+
+            if (!name || !qty) return;
+
+            const payload = {
+                item_name: name,
+                quantity: qty,
+                unit,
+                is_shared: forVal === 'shared',
+                specific_for: forVal !== 'shared' ? parseInt(forVal) : undefined
+            };
+
+            try {
+                const res = await sessionFetch(`${API_BASE}/market/${runId}/items`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    // Reload runs to reflect new item
+                    loadRuns();
+                } else {
+                    alert('Failed to add item');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Mark item purchased (with price prompt)
+        async function markPurchased(itemId) {
+            const price = prompt('Enter price paid (₹):', '0');
+            if (price === null) return;
+            const amount = parseFloat(price);
+            if (isNaN(amount) || amount < 0) {
+                alert('Invalid amount');
+                return;
+            }
+
+            try {
+                const res = await sessionFetch(`${API_BASE}/market/items/${itemId}/purchase`, {
+                    method: 'POST',
+                    body: JSON.stringify({ price: amount })
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    loadRuns();
+                } else {
+                    alert('Failed to mark purchased');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Complete run (convert to expenses)
+        async function completeRun(runId) {
+            if (!confirm('Mark this run as complete? All purchased items will be converted to expenses.')) return;
+            try {
+                const res = await sessionFetch(`${API_BASE}/market/${runId}/complete`, {
+                    method: 'POST'
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    loadRuns();
+                } else {
+                    alert('Failed to complete run');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Initial load
+        Promise.all([loadRoommates(), loadRuns()]);
+
+        // Expose functions to global
+        window.createRun = createRun;
+        window.addItem = addItem;
+        window.markPurchased = markPurchased;
+        window.completeRun = completeRun;
+    </script>
+</body>
+</html>
