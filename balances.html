@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Balances – Roommate Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b1120;
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 1.5rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.5);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area i {
+            font-size: 2rem;
+            color: #818cf8;
+        }
+
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #f0f9ff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #818cf8;
+        }
+
+        /* Summary cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 24px;
+            padding: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .summary-title {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .positive { color: #34d399; }
+        .negative { color: #f87171; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.8rem;
+            background: rgba(255,255,255,0.03);
+            padding: 6px;
+            border-radius: 60px;
+            max-width: 400px;
+        }
+
+        .tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background: white;
+            color: #0f172a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Tables / lists */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .balance-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .balance-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 24px;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: all 0.2s;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .balance-item:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(129,140,248,0.3);
+        }
+
+        .balance-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .balance-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .balance-detail {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .balance-amount {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: rgba(129, 140, 248, 0.15);
+            color: #a5b4fc;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .settle-btn {
+            background: #4f46e5;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .settle-btn:hover {
+            background: #6366f1;
+            transform: scale(1.02);
+        }
+
+        .settle-btn.secondary {
+            background: rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Settlement form (modal-like inline) */
+        .settlement-form {
+            background: rgba(0,0,0,0.3);
+            border-radius: 32px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid #4f46e5;
+            display: none;
+        }
+
+        .settlement-form.show {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 12px 16px;
+            color: white;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #818cf8;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            color: #f87171;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .success-message {
+            background: rgba(52,211,153,0.15);
+            border: 1px solid #34d399;
+            border-radius: 40px;
+            padding: 1rem;
+            color: #d1fae5;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .glass-card { padding: 1.5rem; }
+            .balance-item { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <div class="header">
+            <div class="logo-area">
+                <i class="fas fa-scale-balanced"></i>
+                <h1>Balances & Settlements</h1>
+            </div>
+            <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        </div>
+
+        <!-- Summary cards (dynamic) -->
+        <div class="summary-grid" id="summaryContainer">
+            <div class="summary-card">
+                <div class="summary-title"><i class="fas fa-users"></i> Roommates</div>
+                <div class="summary-value" id="totalRoommates">0</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-title"><i class="fas fa-arrow-up"></i> You owe</div>
+                <div class="summary-value negative" id="youOweTotal">₹0</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-title"><i class="fas fa-arrow-down"></i> Owed to you</div>
+                <div class="summary-value positive" id="owedToYouTotal">₹0</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-title"><i class="fas fa-handshake"></i> Net</div>
+                <div class="summary-value" id="netTotal">₹0</div>
+            </div>
+        </div>
+
+        <!-- Tabs: Simplified vs Detailed -->
+        <div class="tabs">
+            <button class="tab active" id="simplifiedTab" onclick="switchTab('simplified')"><i class="fas fa-compress-alt"></i> Simplified</button>
+            <button class="tab" id="detailedTab" onclick="switchTab('detailed')"><i class="fas fa-list-ul"></i> Detailed</button>
+        </div>
+
+        <!-- Simplified settlements view -->
+        <div id="simplifiedView">
+            <div class="section-title"><i class="fas fa-arrows-spin"></i> Recommended settlements</div>
+            <div class="balance-list" id="settlementsList">
+                <!-- Populated by JS -->
+                <div class="balance-item">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Detailed balances view (initially hidden) -->
+        <div id="detailedView" style="display: none;">
+            <div class="section-title"><i class="fas fa-chart-pie"></i> Detailed balances</div>
+            <div class="balance-list" id="detailedBalancesList">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Settlement form (inline) -->
+        <div id="settlementFormContainer" class="settlement-form">
+            <h3 style="margin-bottom: 1rem;"><i class="fas fa-hand-holding-usd"></i> Record settlement</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>From</label>
+                    <select id="settleFrom"></select>
+                </div>
+                <div class="form-group">
+                    <label>To</label>
+                    <select id="settleTo"></select>
+                </div>
+                <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" id="settleAmount" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Method</label>
+                    <select id="settleMethod">
+                        <option value="cash">Cash</option>
+                        <option value="upi">UPI</option>
+                        <option value="bank">Bank transfer</option>
+                        <option value="card">Card</option>
+                    </select>
+                </div>
+                <button class="settle-btn" onclick="submitSettlement()">Record</button>
+                <button class="settle-btn secondary" onclick="hideSettlementForm()">Cancel</button>
+            </div>
+            <div id="settlementError" class="error-message"></div>
+        </div>
+
+        <!-- Floating action button to open settlement form -->
+        <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+            <button class="settle-btn" onclick="showSettlementForm()"><i class="fas fa-plus"></i> Record payment</button>
+        </div>
+    </div>
+
+    <script>
+        // FIXED: Dynamic API Base to match localhost or 127.0.0.1
+        const host = window.location.hostname;
+        const API_BASE = `http://${host}:5000/api`;
+        
+        let currentUser = null;
+        let balancesData = null;
+        let roommates = [];
+
+        // Check if user is logged in
+        function isLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        if (!isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+
+        // FIXED: Custom session fetch that handles cookies and 401 redirects
+        async function sessionFetch(url, options = {}) {
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    credentials: 'include',  // Most important part for session cookies!
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                if (response.status === 401) {
+                    console.error("Session expired or invalid cookie, redirecting...");
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    window.location.href = 'index.html';
+                    return null;
+                }
+                return response;
+            } catch (err) {
+                console.error('Network error:', err);
+                throw err;
+            }
+        }
+
+        // Fetch current user info (from localStorage)
+        function getUser() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    currentUser = JSON.parse(userStr);
+                } catch (e) {}
+            }
+        }
+        getUser();
+
+        // Load balances from API
+        async function loadBalances() {
+            try {
+                const response = await sessionFetch(`${API_BASE}/balances`, { method: 'GET' });
+                if (!response) return; // handles redirect
+                
+                const result = await response.json();
+                if (result.success) {
+                    balancesData = result.data;
+                    renderSummaries();
+                    renderSettlements();
+                    renderDetailedBalances();
+                    populateSettlementDropdowns();
+                } else {
+                    console.error('Failed to load balances');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Load roommates list for dropdowns
+        async function loadRoommates() {
+            try {
+                const response = await sessionFetch(`${API_BASE}/users/roommates`, { method: 'GET' });
+                if (!response) return; // handles redirect
+                
+                const result = await response.json();
+                if (result.success) {
+                    roommates = result.data.roommates || [];
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Render summary cards
+        function renderSummaries() {
+            if (!balancesData) return;
+            const { balances } = balancesData;
+            const userId = currentUser?.user_id;
+            let youOwe = 0, owedToYou = 0;
+            if (userId && balances) {
+                for (let id in balances) {
+                    if (parseInt(id) === userId) {
+                        youOwe = balances[id].owed || 0;
+                        owedToYou = balances[id].paid || 0;
+                        break;
+                    }
+                }
+            }
+            // Count roommates from balances
+            const roommateCount = Object.keys(balances || {}).length;
+            document.getElementById('totalRoommates').textContent = roommateCount;
+            document.getElementById('youOweTotal').textContent = `₹${youOwe.toFixed(2)}`;
+            document.getElementById('owedToYouTotal').textContent = `₹${owedToYou.toFixed(2)}`;
+            document.getElementById('netTotal').textContent = `₹${(owedToYou - youOwe).toFixed(2)}`;
+        }
+
+        // Render simplified settlements
+        function renderSettlements() {
+            const container = document.getElementById('settlementsList');
+            if (!balancesData || !balancesData.settlements || balancesData.settlements.length === 0) {
+                container.innerHTML = '<div class="balance-item">🎉 All settled up! No pending payments.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            balancesData.settlements.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'balance-item';
+                div.innerHTML = `
+                    <div class="balance-info">
+                        <div class="balance-name">${s.from_name} → ${s.to_name}</div>
+                        <div class="balance-detail">Recommended settlement</div>
+                    </div>
+                    <div class="balance-amount positive">₹${s.amount}</div>
+                    <button class="settle-btn" onclick="quickSettle('${s.from_name}', ${s.from_user}, ${s.to_user}, ${s.amount})"><i class="fas fa-check"></i> Settle</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Render detailed balances per person
+        function renderDetailedBalances() {
+            const container = document.getElementById('detailedBalancesList');
+            if (!balancesData || !balancesData.balances) {
+                container.innerHTML = '<div class="balance-item">No data</div>';
+                return;
+            }
+            const balances = balancesData.balances;
+            container.innerHTML = '';
+            Object.values(balances).forEach(b => {
+                const net = b.net || 0;
+                const status = net > 0 ? 'gets back' : (net < 0 ? 'owes' : 'settled');
+                const amount = Math.abs(net);
+                const div = document.createElement('div');
+                div.className = 'balance-item';
+                div.innerHTML = `
+                    <div class="balance-info">
+                        <div class="balance-name">${b.name}</div>
+                        <div class="balance-detail">
+                            <span>Paid: ₹${b.paid || 0}</span>
+                            <span>Owed: ₹${b.owed || 0}</span>
+                        </div>
+                    </div>
+                    <div class="balance-amount ${net > 0 ? 'positive' : net < 0 ? 'negative' : ''}">
+                        ${net > 0 ? '+' : ''}₹${net.toFixed(2)}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Populate dropdowns in settlement form
+        function populateSettlementDropdowns() {
+            const fromSelect = document.getElementById('settleFrom');
+            const toSelect = document.getElementById('settleTo');
+            if (!roommates.length) return;
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+            roommates.forEach(rm => {
+                const option1 = document.createElement('option');
+                option1.value = rm.user_id;
+                option1.textContent = rm.full_name;
+                fromSelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = rm.user_id;
+                option2.textContent = rm.full_name;
+                toSelect.appendChild(option2);
+            });
+        }
+
+        // Show/hide settlement form
+        function showSettlementForm(fromUser, toUser, amount) {
+            const form = document.getElementById('settlementFormContainer');
+            form.classList.add('show');
+            if (fromUser) document.getElementById('settleFrom').value = fromUser;
+            if (toUser) document.getElementById('settleTo').value = toUser;
+            if (amount) document.getElementById('settleAmount').value = amount;
+        }
+
+        function hideSettlementForm() {
+            document.getElementById('settlementFormContainer').classList.remove('show');
+            document.getElementById('settlementError').innerHTML = '';
+        }
+
+        // Quick settle from simplified list
+        function quickSettle(fromName, fromId, toId, amount) {
+            showSettlementForm(fromId, toId, amount);
+        }
+
+        // Submit settlement
+        async function submitSettlement() {
+            const from = document.getElementById('settleFrom').value;
+            const to = document.getElementById('settleTo').value;
+            const amount = parseFloat(document.getElementById('settleAmount').value);
+            const method = document.getElementById('settleMethod').value;
+            const errorEl = document.getElementById('settlementError');
+
+            if (!from || !to || !amount || amount <= 0) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please fill all fields correctly.';
+                return;
+            }
+            if (from === to) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Cannot settle with yourself.';
+                return;
+            }
+
+            errorEl.innerHTML = '';
+
+            try {
+                const response = await sessionFetch(`${API_BASE}/settlements`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        from_user: parseInt(from),
+                        to_user: parseInt(to),
+                        amount,
+                        payment_method: method,
+                        payment_date: new Date().toISOString().split('T')[0]
+                    })
+                });
+                
+                if (!response) return; // sessionFetch handles redirect
+
+                const data = await response.json();
+                if (data.success) {
+                    // Refresh balances
+                    await loadBalances();
+                    hideSettlementForm();
+                    // Show success message briefly
+                    const msg = document.createElement('div');
+                    msg.className = 'success-message';
+                    msg.innerHTML = '<i class="fas fa-check-circle"></i> Settlement recorded!';
+                    document.querySelector('.glass-card').insertBefore(msg, document.querySelector('.tabs'));
+                    setTimeout(() => msg.remove(), 3000);
+                } else {
+                    errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Failed'}`;
+                }
+            } catch (err) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error';
+                console.error(err);
+            }
+        }
+
+        // Tab switching
+        function switchTab(tab) {
+            const simplifiedTab = document.getElementById('simplifiedTab');
+            const detailedTab = document.getElementById('detailedTab');
+            const simplifiedView = document.getElementById('simplifiedView');
+            const detailedView = document.getElementById('detailedView');
+
+            if (tab === 'simplified') {
+                simplifiedTab.classList.add('active');
+                detailedTab.classList.remove('active');
+                simplifiedView.style.display = 'block';
+                detailedView.style.display = 'none';
+            } else {
+                detailedTab.classList.add('active');
+                simplifiedTab.classList.remove('active');
+                detailedView.style.display = 'block';
+                simplifiedView.style.display = 'none';
+            }
+        }
+
+        // Initial load
+        Promise.all([loadRoommates(), loadBalances()]).then(() => {
+            // Data is loaded and UI is updated automatically
+        });
+
+        // Expose functions to global
+        window.switchTab = switchTab;
+        window.showSettlementForm = showSettlementForm;
+        window.hideSettlementForm = hideSettlementForm;
+        window.submitSettlement = submitSettlement;
+        window.quickSettle = quickSettle;
+    </script>
+</body>
+</html>
