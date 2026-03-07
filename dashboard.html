@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Roommate Manager | Dashboard</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b1120;
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 1rem;
+        }
+
+        /* Glass card component */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(129, 140, 248, 0.3);
+        }
+
+        /* Layout */
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area i {
+            font-size: 2rem;
+            color: #818cf8;
+            background: linear-gradient(145deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(145deg, #f0f9ff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            padding: 0.6rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .user-menu span {
+            font-weight: 500;
+        }
+
+        .user-menu button {
+            background: transparent;
+            border: none;
+            color: #f87171;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .user-menu button:hover {
+            color: #ef4444;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 24px;
+            padding: 1.5rem 1.2rem;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: all 0.2s;
+        }
+
+        .stat-item:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(129,140,248,0.3);
+        }
+
+        .stat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .stat-desc {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        /* Two column layout for main content */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Section headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header a {
+            color: #818cf8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .section-header a:hover {
+            color: #a5b4fc;
+        }
+
+        /* Lists */
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .list-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.02);
+            transition: all 0.2s;
+        }
+
+        .list-item:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(129,140,248,0.2);
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: white;
+        }
+
+        .item-sub {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .item-amount {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fbbf24;
+        }
+
+        .item-amount.positive {
+            color: #34d399;
+        }
+
+        .item-amount.negative {
+            color: #f87171;
+        }
+
+        .badge {
+            background: rgba(129, 140, 248, 0.15);
+            color: #a5b4fc;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .action-button {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-button:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .quick-btn {
+            background: linear-gradient(145deg, #4f46e5, #7c3aed);
+            border: none;
+            border-radius: 60px;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 10px 18px -8px rgba(79, 70, 229, 0.5);
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -8px rgba(79, 70, 229, 0.7);
+        }
+
+        .quick-btn.secondary {
+            background: rgba(255,255,255,0.05);
+            box-shadow: none;
+            color: #cbd5e1;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quick-btn.secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            height: 70px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .user-menu {
+                justify-content: space-between;
+            }
+            .quick-btn {
+                padding: 0.8rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <i class="fas fa-home"></i>
+                <h1>RoomMate</h1>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <span id="userName">Loading...</span>
+                <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+            </div>
+        </div>
+
+        <!-- Stats cards (populated via JS) -->
+        <div class="stats-grid" id="statsContainer">
+            <div class="stat-item">
+                <div class="stat-title"><i class="fas fa-wallet"></i> Total Expenses</div>
+                <div class="stat-number" id="totalExpenses">₹0</div>
+                <div class="stat-desc">Last 30 days</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-title"><i class="fas fa-arrow-up"></i> You Owe</div>
+                <div class="stat-number" id="youOweTotal">₹0</div>
+                <div class="stat-desc">Pending</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-title"><i class="fas fa-arrow-down"></i> Owed to You</div>
+                <div class="stat-number" id="owedToYouTotal">₹0</div>
+                <div class="stat-desc">Pending</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-title"><i class="fas fa-users"></i> Roommates</div>
+                <div class="stat-number" id="roommateCount">0</div>
+                <div class="stat-desc" id="roommatesStatus">All present</div>
+            </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="quick-actions">
+            <button class="quick-btn" onclick="location.href='add-expense.html'"><i class="fas fa-plus-circle"></i> Add Expense</button>
+            <button class="quick-btn secondary" onclick="location.href='market.html'"><i class="fas fa-shopping-cart"></i> Market Run</button>
+            <button class="quick-btn secondary" onclick="location.href='balances.html'"><i class="fas fa-hand-holding-usd"></i> Settle Up</button>
+        </div>
+
+        <!-- Main content grid -->
+        <div class="main-grid">
+            <!-- Left column: balances and recent expenses -->
+            <div class="glass-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-balance-scale"></i> Who owes whom</h2>
+                    <a href="balances.html">View all <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div id="balancesList" class="item-list">
+                    <!-- Will be filled by JS -->
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                </div>
+
+                <div class="section-header" style="margin-top: 1.8rem;">
+                    <h2><i class="fas fa-receipt"></i> Recent expenses</h2>
+                    <a href="expenses.html">View all</a>
+                </div>
+                <div id="recentExpensesList" class="item-list">
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                </div>
+            </div>
+
+            <!-- Right column: market, inventory, chat preview -->
+            <div class="glass-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-shopping-basket"></i> Active market runs</h2>
+                    <a href="market.html">Start new</a>
+                </div>
+                <div id="marketRunsList" class="item-list">
+                    <div class="skeleton"></div>
+                </div>
+
+                <div class="section-header" style="margin-top: 1.8rem;">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Low stock</h2>
+                    <a href="inventory.html">Manage</a>
+                </div>
+                <div id="lowStockList" class="item-list">
+                    <div class="skeleton"></div>
+                </div>
+
+                <div class="section-header" style="margin-top: 1.8rem;">
+                    <h2><i class="fas fa-comments"></i> Recent chat</h2>
+                    <a href="chat.html">Open chat</a>
+                </div>
+                <div id="chatPreviewList" class="item-list">
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional footer -->
+        <div style="text-align: center; margin-top: 2rem; color: #475569; font-size: 0.85rem;">
+            <i class="fas fa-shield-alt"></i> All data encrypted • Roommate Manager v1.0
+        </div>
+    </div>
+
+    <script>
+        // BUG FIX 1: Make API_BASE dynamic to match localhost or 127.0.0.1
+        // This prevents the browser from dropping cookies due to domain mismatch!
+        const host = window.location.hostname;
+        const API_BASE = `http://${host}:5000/api`;
+
+        // Check if user is logged in (using isLoggedIn flag from index.html)
+        function isLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        // Get user data from localStorage
+        function getUser() {
+            const userStr = localStorage.getItem('user');
+            try {
+                return userStr ? JSON.parse(userStr) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            // Call logout API to clear session on server
+            fetch(`${API_BASE}/auth/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            }).finally(() => {
+                // Clear local storage
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('user');
+                // Redirect to login
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Fetch with session (no token headers)
+        async function sessionFetch(url, options = {}) {
+            // Check login status first
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html';
+                return null;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    credentials: 'include',  // This sends the session cookie
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+
+                // If unauthorized (session expired), redirect to login
+                if (response.status === 401) {
+                    console.error("Session expired or invalid cookie, redirecting...");
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    window.location.href = 'index.html';
+                    return null;
+                }
+
+                return response;
+            } catch (err) {
+                console.error('Network error:', err);
+                throw err;
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Display user name from localStorage immediately
+                const user = getUser();
+                if (user) {
+                    document.getElementById('userName').textContent = user.full_name || 'User';
+                }
+
+                const response = await sessionFetch(`${API_BASE}/dashboard`);
+                if (!response) return;
+                
+                const result = await response.json();
+                if (result.success) {
+                    renderDashboard(result.data);
+                } else {
+                    console.error('Failed to load dashboard:', result.error);
+                }
+            } catch (err) {
+                console.error('Error loading dashboard:', err);
+            }
+        }
+
+        // Render all sections
+        function renderDashboard(data) {
+            // Update user info
+            const user = data.user || {};
+            document.getElementById('userName').textContent = user.full_name || 'User';
+
+            // Stats
+            document.getElementById('totalExpenses').textContent = `₹${(data.you_owe_total || 0) + (data.owed_to_you_total || 0)}`;
+            document.getElementById('youOweTotal').textContent = `₹${data.you_owe_total || 0}`;
+            document.getElementById('owedToYouTotal').textContent = `₹${data.owed_to_you_total || 0}`;
+            document.getElementById('roommateCount').textContent = data.roommate_count || 0;
+            const outCount = (data.out_of_station || []).length;
+            document.getElementById('roommatesStatus').textContent = outCount ? `${outCount} away` : 'All present';
+
+            // Balances (simplified list)
+            const balancesList = document.getElementById('balancesList');
+            balancesList.innerHTML = '';
+            const settlements = data.balances?.settlements || [];
+            if (settlements.length === 0) {
+                balancesList.innerHTML = '<div class="list-item"><span>🎉 All settled up!</span></div>';
+            } else {
+                settlements.slice(0, 3).forEach(s => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${s.from_name} → ${s.to_name}</div>
+                            <div class="item-sub">Settle ₹${s.amount}</div>
+                        </div>
+                        <span class="badge">pending</span>
+                    `;
+                    balancesList.appendChild(item);
+                });
+            }
+
+            // Recent expenses
+            const recentExpenses = data.recent_expenses || [];
+            const recentEl = document.getElementById('recentExpensesList');
+            recentEl.innerHTML = '';
+            if (recentExpenses.length === 0) {
+                recentEl.innerHTML = '<div class="list-item">No recent expenses</div>';
+            } else {
+                recentExpenses.slice(0, 3).forEach(exp => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${exp.description || 'Expense'}</div>
+                            <div class="item-sub">${exp.paid_by_name || 'Someone'} • ${new Date(exp.expense_date).toLocaleDateString()}</div>
+                        </div>
+                        <div class="item-amount">₹${exp.amount}</div>
+                    `;
+                    recentEl.appendChild(item);
+                });
+            }
+
+            // Market runs
+            const marketRuns = data.active_markets || [];
+            const marketEl = document.getElementById('marketRunsList');
+            marketEl.innerHTML = '';
+            if (marketRuns.length === 0) {
+                marketEl.innerHTML = '<div class="list-item">No active market runs</div>';
+            } else {
+                marketRuns.slice(0, 2).forEach(run => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${run.market_name || 'Market run'}</div>
+                            <div class="item-sub">${new Date(run.run_date).toLocaleDateString()}</div>
+                        </div>
+                        <span class="badge">${run.status}</span>
+                    `;
+                    marketEl.appendChild(item);
+                });
+            }
+
+            // Low stock
+            const lowStock = data.low_stock || [];
+            const stockEl = document.getElementById('lowStockList');
+            stockEl.innerHTML = '';
+            if (lowStock.length === 0) {
+                stockEl.innerHTML = '<div class="list-item">✅ All items stocked</div>';
+            } else {
+                lowStock.slice(0, 3).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'list-item';
+                    div.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${item.item_name}</div>
+                            <div class="item-sub">${item.quantity} ${item.unit} left (min ${item.min_quantity})</div>
+                        </div>
+                        <button class="action-button" onclick="location.href='inventory.html'"><i class="fas fa-plus"></i> restock</button>
+                    `;
+                    stockEl.appendChild(div);
+                });
+            }
+
+            // Chat preview
+            const chats = data.recent_chats || [];
+            const chatEl = document.getElementById('chatPreviewList');
+            chatEl.innerHTML = '';
+            if (chats.length === 0) {
+                chatEl.innerHTML = '<div class="list-item">No messages yet</div>';
+            } else {
+                chats.slice(0, 3).forEach(msg => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-info">
+                            <div class="item-title">${msg.sender_name || 'User'}</div>
+                            <div class="item-sub">${msg.message_text?.substring(0, 30)}...</div>
+                        </div>
+                        <span class="badge">${new Date(msg.created_at).toLocaleTimeString()}</span>
+                    `;
+                    chatEl.appendChild(item);
+                });
+            }
+        }
+
+        // Initial load
+        window.onload = function() {
+            // Check if user is logged in using our new flag
+            if (!isLoggedIn()) {
+                console.log('Not logged in, redirecting to index');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            console.log('User is logged in, loading dashboard');
+            loadDashboard();
+        };
+    </script>
+</body>
+</html>
