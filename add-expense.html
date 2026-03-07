@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Add Expense – Roommate Manager</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b1120;
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glass card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area i {
+            font-size: 2rem;
+            color: #818cf8;
+        }
+
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #f0f9ff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #818cf8;
+        }
+
+        /* Form layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 800px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 14px 18px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #818cf8;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #475569;
+        }
+
+        /* Split options */
+        .split-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 0.5rem 0 1rem;
+            background: rgba(255,255,255,0.03);
+            padding: 6px;
+            border-radius: 60px;
+            max-width: 300px;
+        }
+
+        .split-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .split-tab.active {
+            background: white;
+            color: #0f172a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Roommates list for custom split */
+        .roommate-split-list {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .roommate-split-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 10px 16px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .roommate-split-item .name {
+            font-weight: 500;
+        }
+
+        .roommate-split-item input {
+            width: 120px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 8px 12px;
+            color: white;
+            text-align: right;
+        }
+
+        .equal-share-info {
+            background: rgba(129,140,248,0.1);
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px dashed #4f46e5;
+            margin: 1rem 0;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #4f46e5, #7c3aed);
+            border: none;
+            border-radius: 60px;
+            padding: 1rem 2.5rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 20px -5px rgba(79,70,229,0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px -5px rgba(79,70,229,0.7);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 60px;
+            padding: 1rem 2.5rem;
+            color: #cbd5e1;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .error-message {
+            color: #f87171;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Success message */
+        .success-message {
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid #34d399;
+            border-radius: 40px;
+            padding: 1rem;
+            color: #d1fae5;
+            text-align: center;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card" style="max-width: 1100px; margin: 0 auto; width: 100%;">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <i class="fas fa-receipt"></i>
+                <h1>Add Expense</h1>
+            </div>
+            <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+
+        <!-- Main Form -->
+        <form id="expenseForm" onsubmit="event.preventDefault(); submitExpense();">
+            <div class="form-grid">
+                <!-- Left column: basic info -->
+                <div class="form-section">
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Description</label>
+                        <input type="text" id="description" placeholder="e.g., Groceries, Electricity bill" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Category</label>
+                        <select id="category">
+                            <option value="groceries">Groceries</option>
+                            <option value="rent">Rent</option>
+                            <option value="electricity">Electricity</option>
+                            <option value="water">Water</option>
+                            <option value="internet">Internet</option>
+                            <option value="gas">Gas</option>
+                            <option value="dining">Dining out</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-indian-rupee-sign"></i> Amount (₹)</label>
+                        <input type="number" id="amount" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Date</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-store"></i> Market / Store (optional)</label>
+                        <input type="text" id="marketName" placeholder="e.g., DMart">
+                    </div>
+                </div>
+
+                <!-- Right column: split details -->
+                <div class="form-section">
+                    <div class="form-group">
+                        <label><i class="fas fa-users"></i> Split type</label>
+                        <div class="split-tabs">
+                            <button type="button" class="split-tab active" id="equalTab" onclick="setSplitMode('equal')"><i class="fas fa-equals"></i> Equal</button>
+                            <button type="button" class="split-tab" id="customTab" onclick="setSplitMode('custom')"><i class="fas fa-sliders-h"></i> Custom</button>
+                        </div>
+                    </div>
+
+                    <!-- Equal split info (shown when equal mode) -->
+                    <div id="equalSplitInfo" class="equal-share-info">
+                        <i class="fas fa-calculator"></i> The amount will be split equally among all active roommates.
+                    </div>
+
+                    <!-- Custom split list (shown when custom mode) -->
+                    <div id="customSplitSection" class="hidden">
+                        <div class="form-group">
+                            <label>Split amounts per person</label>
+                            <div class="roommate-split-list" id="roommateListContainer">
+                                <!-- Will be populated via JavaScript -->
+                            </div>
+                            <div class="error-message" id="splitTotalError"></div>
+                        </div>
+                    </div>
+
+                    <!-- Optional note -->
+                    <div class="form-group">
+                        <label><i class="fas fa-pencil-alt"></i> Note (optional)</label>
+                        <textarea id="note" rows="3" placeholder="Any additional details..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="action-buttons">
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span id="submitBtnText"><i class="fas fa-plus-circle"></i> Add Expense</span>
+                    <span id="submitLoader" class="loader hidden"></span>
+                </button>
+                <a href="dashboard.html" class="btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+            </div>
+
+            <div id="formError" class="error-message"></div>
+            <div id="formSuccess" class="success-message hidden">
+                <i class="fas fa-check-circle"></i> Expense added successfully! Redirecting...
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // FIXED: Dynamic API Base to match localhost or 127.0.0.1
+        const host = window.location.hostname;
+        const API_BASE = `http://${host}:5000/api`;
+
+        // State
+        let currentSplitMode = 'equal';
+        let roommates = []; 
+        let customAmounts = {}; 
+
+        // Check if user is logged in
+        function isLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        // Check auth on load
+        if (!isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+
+        // FIXED: Custom session fetch that handles cookies and 401 redirects
+        async function sessionFetch(url, options = {}) {
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html';
+                return null;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    credentials: 'include',  // Most important part for session cookies!
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+
+                if (response.status === 401) {
+                    console.error("Session expired or invalid cookie, redirecting...");
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    window.location.href = 'index.html';
+                    return null;
+                }
+
+                return response;
+            } catch (err) {
+                console.error('Network error:', err);
+                throw err;
+            }
+        }
+
+        // Set today's date as default
+        document.getElementById('expenseDate').valueAsDate = new Date();
+
+        // Fetch roommates to populate custom split list
+        async function loadRoommates() {
+            try {
+                // FIXED: Using sessionFetch instead of standard fetch with token
+                const response = await sessionFetch(`${API_BASE}/users/roommates`, {
+                    method: 'GET'
+                });
+                
+                if (!response) return; // sessionFetch handles redirect
+                
+                const result = await response.json();
+                if (result.success) {
+                    roommates = result.data.roommates || [];
+                    renderRoommateList();
+                } else {
+                    console.error('Failed to load roommates');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Render the custom split list
+        function renderRoommateList() {
+            const container = document.getElementById('roommateListContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            roommates.forEach(rm => {
+                const div = document.createElement('div');
+                div.className = 'roommate-split-item';
+                div.innerHTML = `
+                    <span class="name"><i class="fas fa-user-circle" style="margin-right: 8px;"></i>${rm.full_name}</span>
+                    <input type="number" step="0.01" min="0" class="custom-amount" data-id="${rm.user_id}" placeholder="Amount" value="${customAmounts[rm.user_id] || ''}" oninput="updateCustomAmount(${rm.user_id}, this.value)">
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Update custom amount in state
+        function updateCustomAmount(userId, value) {
+            customAmounts[userId] = value ? parseFloat(value) : 0;
+            validateCustomTotal();
+        }
+
+        // Validate custom total equals expense amount
+        function validateCustomTotal() {
+            const totalAmount = parseFloat(document.getElementById('amount').value) || 0;
+            const customTotal = Object.values(customAmounts).reduce((sum, amt) => sum + (amt || 0), 0);
+            const errorEl = document.getElementById('splitTotalError');
+            if (Math.abs(customTotal - totalAmount) > 0.01) {
+                errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> Total of custom amounts (₹${customTotal.toFixed(2)}) does not match expense amount (₹${totalAmount.toFixed(2)})`;
+                return false;
+            } else {
+                errorEl.innerHTML = '';
+                return true;
+            }
+        }
+
+        // Switch split mode
+        function setSplitMode(mode) {
+            currentSplitMode = mode;
+            const equalTab = document.getElementById('equalTab');
+            const customTab = document.getElementById('customTab');
+            const equalInfo = document.getElementById('equalSplitInfo');
+            const customSection = document.getElementById('customSplitSection');
+
+            if (mode === 'equal') {
+                equalTab.classList.add('active');
+                customTab.classList.remove('active');
+                equalInfo.classList.remove('hidden');
+                customSection.classList.add('hidden');
+            } else {
+                customTab.classList.add('active');
+                equalTab.classList.remove('active');
+                equalInfo.classList.add('hidden');
+                customSection.classList.remove('hidden');
+                // Revalidate when switching to custom
+                validateCustomTotal();
+            }
+        }
+
+        // Submit expense
+        async function submitExpense() {
+            const description = document.getElementById('description').value.trim();
+            const category = document.getElementById('category').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const expenseDate = document.getElementById('expenseDate').value;
+            const marketName = document.getElementById('marketName').value.trim();
+            const note = document.getElementById('note').value.trim();
+            const errorEl = document.getElementById('formError');
+            const successEl = document.getElementById('formSuccess');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitBtnText');
+            const loader = document.getElementById('submitLoader');
+
+            // Basic validation
+            if (!description || !amount || amount <= 0) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please fill all required fields with valid amount.';
+                return;
+            }
+
+            // Prepare splits array
+            let splits = [];
+            if (currentSplitMode === 'equal') {
+                // For equal split, backend can handle by omitting splits or sending empty.
+                // Our backend's add_expense expects splits array for custom, but if split_type='equal' it will auto-create.
+                // We'll send empty splits and set split_type='equal'.
+            } else {
+                // Custom mode: build splits array
+                if (!validateCustomTotal()) {
+                    errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please ensure custom amounts sum to total amount.';
+                    return;
+                }
+                splits = Object.entries(customAmounts)
+                    .filter(([_, amt]) => amt > 0)
+                    .map(([userId, amt]) => ({
+                        user_id: parseInt(userId),
+                        amount: amt
+                    }));
+            }
+
+            const payload = {
+                description,
+                category,
+                amount,
+                expense_date: expenseDate,
+                market_name: marketName || undefined,
+                note: note || undefined,
+                split_type: currentSplitMode,
+                splits: splits.length ? splits : undefined
+            };
+
+            // Disable button, show loader
+            submitBtn.disabled = true;
+            submitText.classList.add('hidden');
+            loader.classList.remove('hidden');
+            errorEl.innerHTML = '';
+
+            try {
+                // FIXED: Using sessionFetch
+                const response = await sessionFetch(`${API_BASE}/expenses`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response) return; // Handles auth redirect
+
+                const data = await response.json();
+
+                if (data.success) {
+                    successEl.classList.remove('hidden');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Failed to add expense'}`;
+                    submitBtn.disabled = false;
+                    submitText.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                }
+            } catch (err) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error. Is the backend running?';
+                submitBtn.disabled = false;
+                submitText.classList.remove('hidden');
+                loader.classList.add('hidden');
+                console.error(err);
+            }
+        }
+
+        // Recalculate custom total when amount changes
+        document.getElementById('amount').addEventListener('input', function() {
+            if (currentSplitMode === 'custom') {
+                validateCustomTotal();
+            }
+        });
+
+        // Initial load
+        window.onload = function() {
+            loadRoommates();
+        }
+
+        // Expose functions to global for onclick handlers
+        window.setSplitMode = setSplitMode;
+        window.submitExpense = submitExpense;
+        window.updateCustomAmount = updateCustomAmount;
+    </script>
+</body>
+</html>
