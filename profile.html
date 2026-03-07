@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Profile – Roommate Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b1120;
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 1.5rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area i {
+            font-size: 2rem;
+            color: #818cf8;
+        }
+
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #f0f9ff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #818cf8;
+        }
+
+        .profile-section {
+            background: rgba(255,255,255,0.02);
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #a5b4fc;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 12px 16px;
+            color: white;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            border-color: #818cf8;
+        }
+
+        .form-group input[readonly] {
+            background: rgba(255,255,255,0.02);
+            color: #94a3b8;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #4f46e5, #7c3aed);
+            border: none;
+            border-radius: 60px;
+            padding: 12px 28px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px -5px rgba(79,70,229,0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px -5px rgba(79,70,229,0.7);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 60px;
+            padding: 12px 28px;
+            color: #cbd5e1;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+
+        .status-present {
+            background: #10b98120;
+            color: #34d399;
+        }
+
+        .status-away {
+            background: #f9731620;
+            color: #fb923c;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            color: #f87171;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .success-message {
+            background: rgba(52,211,153,0.15);
+            border: 1px solid #34d399;
+            border-radius: 40px;
+            padding: 1rem;
+            color: #d1fae5;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .info-label {
+            color: #94a3b8;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .danger-zone {
+            border: 1px solid rgba(239,68,68,0.3);
+            background: rgba(239,68,68,0.05);
+        }
+
+        .room-code-box {
+            background: rgba(129,140,248,0.1);
+            border-radius: 40px;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border: 1px dashed #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <div class="header">
+            <div class="logo-area">
+                <i class="fas fa-user-circle"></i>
+                <h1>Profile & Settings</h1>
+            </div>
+            <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        </div>
+
+        <!-- User info summary -->
+        <div class="profile-section">
+            <div class="section-title"><i class="fas fa-id-card"></i> Personal information</div>
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-user"></i> Name</span>
+                <span class="info-value" id="displayName">Loading...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
+                <span class="info-value" id="displayEmail">Loading...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-phone"></i> Phone</span>
+                <span class="info-value" id="displayPhone">Not set</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-door-open"></i> Room</span>
+                <span class="info-value" id="displayRoom">Loading...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-qrcode"></i> Room code</span>
+                <span class="info-value" id="displayRoomCode">Loading...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fas fa-circle"></i> Status</span>
+                <span class="info-value" id="displayStatus">Present</span>
+            </div>
+        </div>
+
+        <!-- Edit profile form -->
+        <div class="profile-section">
+            <div class="section-title"><i class="fas fa-edit"></i> Edit profile</div>
+            <form id="profileForm" onsubmit="event.preventDefault(); updateProfile();">
+                <div class="form-group">
+                    <label>Full name</label>
+                    <input type="text" id="editName" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label>Phone number</label>
+                    <input type="text" id="editPhone" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label>New password (leave blank to keep current)</label>
+                    <input type="password" id="editPassword" placeholder="New password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm new password</label>
+                    <input type="password" id="editConfirmPassword" placeholder="Confirm password">
+                </div>
+                <button type="submit" class="btn-primary" id="updateProfileBtn">
+                    <span id="updateBtnText"><i class="fas fa-save"></i> Save changes</span>
+                    <span id="updateLoader" class="loader hidden"></span>
+                </button>
+                <div id="profileError" class="error-message"></div>
+                <div id="profileSuccess" class="success-message hidden"></div>
+            </form>
+        </div>
+
+        <!-- Out of station status -->
+        <div class="profile-section">
+            <div class="section-title"><i class="fas fa-plane-departure"></i> Out of station</div>
+            <p style="margin-bottom: 1rem; color: #94a3b8;">Let your roommates know when you're away – your share of daily expenses will be paused.</p>
+            <div class="form-row" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="form-group" style="flex:1;">
+                    <label>Start date</label>
+                    <input type="date" id="awayStart">
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>End date</label>
+                    <input type="date" id="awayEnd">
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Reason (optional)</label>
+                    <input type="text" id="awayReason" placeholder="e.g., Vacation">
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="btn-primary" onclick="setAway()"><i class="fas fa-clock"></i> Set away</button>
+                <button class="btn-secondary" onclick="clearAway()"><i class="fas fa-check-circle"></i> Mark present</button>
+            </div>
+            <div id="awayError" class="error-message"></div>
+            <div id="awaySuccess" class="success-message hidden"></div>
+        </div>
+
+        <!-- Room information / Danger zone -->
+        <div class="profile-section danger-zone">
+            <div class="section-title" style="color: #f87171;"><i class="fas fa-exclamation-triangle"></i> Room settings</div>
+            <div class="room-code-box" id="roomCodeDisplay">ABCD1234</div>
+            <p style="margin: 1rem 0; color: #94a3b8;">Share this code with new roommates so they can join your room.</p>
+            <button class="btn-secondary" onclick="copyRoomCode()"><i class="fas fa-copy"></i> Copy code</button>
+            <button class="btn-secondary" style="margin-left: 1rem;" onclick="regenerateRoomCode()"><i class="fas fa-sync"></i> Regenerate</button>
+            <div id="roomCodeError" class="error-message"></div>
+            <div id="roomCodeSuccess" class="success-message hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // FIXED: Dynamic URLs to match localhost or 127.0.0.1
+        const host = window.location.hostname;
+        const API_BASE = `http://${host}:5000/api`;
+        let currentUser = null;
+
+        // Check if user is logged in
+        function isLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        // FIXED: Custom session fetch that handles cookies and 401 redirects
+        async function sessionFetch(url, options = {}) {
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html';
+                return null;
+            }
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    credentials: 'include',  // Important for session cookies
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                if (response.status === 401) {
+                    console.error("Session expired or invalid cookie, redirecting...");
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    window.location.href = 'index.html';
+                    return null;
+                }
+                return response;
+            } catch (err) {
+                console.error('Network error:', err);
+                throw err;
+            }
+        }
+
+        function getUser() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    currentUser = JSON.parse(userStr);
+                } catch (e) {}
+            }
+        }
+        getUser();
+
+        if (!isLoggedIn() || !currentUser) {
+            window.location.href = 'index.html';
+        }
+
+        // Load user data into form and display
+        function loadUserData() {
+            document.getElementById('displayName').textContent = currentUser.full_name || '—';
+            document.getElementById('displayEmail').textContent = currentUser.email || '—';
+            document.getElementById('displayPhone').textContent = currentUser.phone || 'Not set';
+            document.getElementById('displayRoom').textContent = currentUser.room_number || '—';
+            document.getElementById('displayRoomCode').textContent = currentUser.room_code || '—';
+            document.getElementById('roomCodeDisplay').textContent = currentUser.room_code || '—';
+
+            // Fill edit form
+            document.getElementById('editName').value = currentUser.full_name || '';
+            document.getElementById('editPhone').value = currentUser.phone || '';
+
+            // Fetch fresh user data (maybe updated status)
+            fetchUserStatus();
+        }
+
+        async function fetchUserStatus() {
+            try {
+                const res = await sessionFetch(`${API_BASE}/users/me`, { method: 'GET' });
+                if (!res) return;
+                
+                const data = await res.json();
+                if (data.success) {
+                    const user = data.data.user;
+                    if (user.is_out_of_station) {
+                        const endDate = user.out_station_end ? new Date(user.out_station_end).toLocaleDateString() : 'unknown';
+                        document.getElementById('displayStatus').innerHTML = `<span class="status-badge status-away"><i class="fas fa-clock"></i> Away until ${endDate}</span>`;
+                        // Prefill away form
+                        if (user.out_station_start) document.getElementById('awayStart').value = user.out_station_start;
+                        if (user.out_station_end) document.getElementById('awayEnd').value = user.out_station_end;
+                        if (user.out_station_reason) document.getElementById('awayReason').value = user.out_station_reason;
+                    } else {
+                        document.getElementById('displayStatus').innerHTML = `<span class="status-badge status-present"><i class="fas fa-check-circle"></i> Present</span>`;
+                        // Clear away form
+                        document.getElementById('awayStart').value = '';
+                        document.getElementById('awayEnd').value = '';
+                        document.getElementById('awayReason').value = '';
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Update profile
+        async function updateProfile() {
+            const name = document.getElementById('editName').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            const password = document.getElementById('editPassword').value;
+            const confirm = document.getElementById('editConfirmPassword').value;
+            const errorEl = document.getElementById('profileError');
+            const successEl = document.getElementById('profileSuccess');
+            const btn = document.getElementById('updateProfileBtn');
+            const btnText = document.getElementById('updateBtnText');
+            const loader = document.getElementById('updateLoader');
+
+            errorEl.innerHTML = '';
+            successEl.classList.add('hidden');
+
+            if (!name) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Name cannot be empty.';
+                return;
+            }
+
+            if (password && password !== confirm) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Passwords do not match.';
+                return;
+            }
+
+            btn.disabled = true;
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            try {
+                const payload = { full_name: name, phone: phone || undefined };
+                if (password) payload.password = password;
+
+                const res = await sessionFetch(`${API_BASE}/users/me`, {
+                    method: 'PUT',
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    // Update localStorage
+                    currentUser = { ...currentUser, ...data.data.user };
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    loadUserData();
+                    successEl.innerHTML = '<i class="fas fa-check-circle"></i> Profile updated successfully.';
+                    successEl.classList.remove('hidden');
+                    document.getElementById('editPassword').value = '';
+                    document.getElementById('editConfirmPassword').value = '';
+                } else {
+                    errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Update failed.'}`;
+                }
+            } catch (err) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error.';
+            } finally {
+                btn.disabled = false;
+                btnText.classList.remove('hidden');
+                loader.classList.add('hidden');
+            }
+        }
+
+        // Set away status
+        async function setAway() {
+            const start = document.getElementById('awayStart').value;
+            const end = document.getElementById('awayEnd').value;
+            const reason = document.getElementById('awayReason').value.trim();
+            const errorEl = document.getElementById('awayError');
+            const successEl = document.getElementById('awaySuccess');
+
+            if (!start || !end) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select both start and end dates.';
+                return;
+            }
+            if (new Date(start) > new Date(end)) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> End date must be after start date.';
+                return;
+            }
+
+            try {
+                const res = await sessionFetch(`${API_BASE}/users/status`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        is_out_of_station: true,
+                        start_date: start,
+                        end_date: end,
+                        reason: reason || undefined
+                    })
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    successEl.innerHTML = '<i class="fas fa-check-circle"></i> Status updated. You are now marked as away.';
+                    successEl.classList.remove('hidden');
+                    fetchUserStatus();
+                    setTimeout(() => successEl.classList.add('hidden'), 3000);
+                } else {
+                    errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Update failed.'}`;
+                }
+            } catch (err) {
+                errorEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error.';
+            }
+        }
+
+        // Clear away status (mark present)
+        async function clearAway() {
+            try {
+                const res = await sessionFetch(`${API_BASE}/users/status`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ is_out_of_station: false })
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    const successEl = document.getElementById('awaySuccess');
+                    successEl.innerHTML = '<i class="fas fa-check-circle"></i> Status updated. Welcome back!';
+                    successEl.classList.remove('hidden');
+                    fetchUserStatus();
+                    setTimeout(() => successEl.classList.add('hidden'), 3000);
+                } else {
+                    document.getElementById('awayError').innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Update failed.'}`;
+                }
+            } catch (err) {
+                document.getElementById('awayError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error.';
+            }
+        }
+
+        // Copy room code to clipboard
+        function copyRoomCode() {
+            const code = currentUser?.room_code;
+            if (!code) return;
+            // Fallback since navigator.clipboard might not work in some iframes
+            try {
+                navigator.clipboard.writeText(code).then(showCopySuccess).catch(fallbackCopy);
+            } catch (e) {
+                fallbackCopy(code);
+            }
+            
+            function showCopySuccess() {
+                const success = document.getElementById('roomCodeSuccess');
+                success.innerHTML = '<i class="fas fa-check-circle"></i> Room code copied!';
+                success.classList.remove('hidden');
+                setTimeout(() => success.classList.add('hidden'), 2000);
+            }
+            
+            function fallbackCopy(textToCopy) {
+                const textArea = document.createElement("textarea");
+                textArea.value = typeof textToCopy === 'string' ? textToCopy : code;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showCopySuccess();
+                } catch (err) {
+                    document.getElementById('roomCodeError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to copy.';
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // Regenerate room code (admin-ish)
+        async function regenerateRoomCode() {
+            if (!confirm('Generate a new room code? Current members will need the new code to join. Continue?')) return;
+            try {
+                const res = await sessionFetch(`${API_BASE}/users/room/code`, {
+                    method: 'PUT'
+                });
+                
+                if (!res) return;
+
+                const data = await res.json();
+                if (data.success) {
+                    currentUser.room_code = data.data.room_code;
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    document.getElementById('displayRoomCode').textContent = currentUser.room_code;
+                    document.getElementById('roomCodeDisplay').textContent = currentUser.room_code;
+                    const success = document.getElementById('roomCodeSuccess');
+                    success.innerHTML = '<i class="fas fa-check-circle"></i> Room code regenerated.';
+                    success.classList.remove('hidden');
+                    setTimeout(() => success.classList.add('hidden'), 3000);
+                } else {
+                    document.getElementById('roomCodeError').innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Failed.'}`;
+                }
+            } catch (err) {
+                document.getElementById('roomCodeError').innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error.';
+            }
+        }
+
+        // Initial load
+        loadUserData();
+
+        // Expose functions globally
+        window.updateProfile = updateProfile;
+        window.setAway = setAway;
+        window.clearAway = clearAway;
+        window.copyRoomCode = copyRoomCode;
+        window.regenerateRoomCode = regenerateRoomCode;
+    </script>
+</body>
+</html>
