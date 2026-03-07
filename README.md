@@ -1,49 +1,59 @@
-# 🛡️ AstraNiti - Civic Awareness Platform
-> **"Bharat Badlega, Jab Hum Badlenge."** (India will change when we change.)
+# 🏠 Roommate Management System
 
-![Project Status](https://img.shields.io/badge/Status-Active-brightgreen)
-![Tech Stack](https://img.shields.io/badge/Built%20With-HTML%20%7C%20Tailwind%20%7C%20JS-blue)
-![License](https://img.shields.io/badge/License-MIT-orange)
+A complete full-stack web application for roommates to manage expenses, track shared shopping, inventory, and communicate seamlessly.
 
-## 📖 About The Project
+## 📋 Features
 
-**AstraNiti** is a web-based social initiative designed to tackle the lack of civic sense in India. It aims to transform the "Chalta Hai" (it's okay) attitude into a culture of responsibility, discipline, and cleanliness.
+### 💰 Expense Management
+- Add shared expenses with equal or custom splits
+- Track who paid and who owes what
+- View balances and simplified settlements
+- Mark payments as received
 
-The platform serves as a hub for education, issue reporting, and self-assessment, encouraging citizens to take a pledge for a better nation.
+### 🛒 Market Runs
+- Create group shopping trips
+- Add items with quantities and prices
+- Mark items as purchased
+- Auto-convert purchased items to expenses
 
-### 🌟 Key Features
+### 📦 Inventory Tracking
+- Track household supplies
+- Set minimum quantity alerts
+- Update quantities when items are consumed
+- Low stock notifications
 
-* **📢 Report Issues (Mockup):** An interactive form to report garbage piles, potholes, and traffic violations with a live feed simulation.
-* **🤝 The Civic Pledge:** Users can take a digital pledge to be responsible citizens and generate a signed certificate instantly.
-* **🧠 Civic Quiz:** A gamified self-assessment tool to test your knowledge of social etiquette and civic duties.
-* **📺 Video Library:** A curated collection of educational videos (featuring content on civic sense, moral lessons, and systemic analysis).
-* **📚 Etiquette Manual:** clear guidelines on how to behave at work, on the road, and in public spaces.
-* **📱 Fully Responsive:** Works seamlessly on mobile devices and desktops.
+### 💬 Group Chat
+- Real-time messaging with Socket.IO
+- Mention roommates using @username
+- Auto-generated messages for expenses and payments
+- Message history
 
----
+### 👥 User Management
+- Register with email and password
+- Create or join rooms with room codes
+- Set out-of-station status
+- Update profile information
+
+### 📊 Dashboard
+- Overview of expenses and balances
+- Recent activity feed
+- Quick access to all features
+- Low stock alerts
 
 ## 🛠️ Tech Stack
 
-This project is built using a lightweight, no-build stack for easy deployment and accessibility.
+### Backend
+- **Python** 3.8+
+- **Flask** - Web framework
+- **Flask-SocketIO** - Real-time communication
+- **MySQL** - Database
+- **Python-dotenv** - Environment variables
 
-* **Structure:** HTML5
-* **Styling:** Tailwind CSS (via CDN)
-* **Icons:** Lucide Icons
-* **Fonts:** Google Fonts (Inter & Great Vibes)
-* **Logic:** Vanilla JavaScript (ES6+)
+### Frontend
+- **HTML5** - Structure
+- **CSS3** - Styling with glassmorphism design
+- **JavaScript** - Client-side logic
+- **Socket.IO Client** - Real-time updates
+- **Font Awesome** - Icons
 
----
-
-## 🚀 How to Run Locally
-
-Since this project uses CDN links for Tailwind and Icons, you do **not** need to install Node.js or run `npm install`.
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/your-username/astraniti.git](https://github.com/your-username/astraniti.git)
-    ```
-2.  **Navigate to the folder:**
-    ```bash
-    cd astraniti
-    ```
-3.  **Run the
+## 📁 Project Structure
